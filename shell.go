@@ -20,7 +20,7 @@ func (s *shell) startShell() {
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			l := newLexer(string(cmd))
+			l := newLexer(string(cmd), "<stdin>")
 			tokens, err := l.make_token()
 			if err != nil {
 				panic(err)

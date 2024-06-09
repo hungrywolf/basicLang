@@ -7,15 +7,17 @@ import (
 
 type lexer struct {
 	text []rune
-	pos  int
+	pos  *position
 	char rune
+	fn   string
 }
 
-func newLexer(text string) *lexer {
+func newLexer(text string, fn string) *lexer {
 	chars := []rune(text)
-
+	position := NewPosition()
 	lexer := &lexer{text: chars,
-		pos: -1,
+		pos: position,
+		fn:  fn,
 	}
 
 	lexer.next()
@@ -24,10 +26,10 @@ func newLexer(text string) *lexer {
 }
 
 func (l *lexer) next() {
-	l.pos += 1
+	pos := l.pos.nextLine(l.char)
 
-	if l.pos < len(l.text) {
-		l.char = l.text[l.pos]
+	if pos.idx < len(l.text) {
+		l.char = l.text[pos.idx]
 	} else {
 		l.char = 0
 	}
@@ -81,7 +83,7 @@ func (l *lexer) make_token() ([]token, error) {
 
 		default:
 			fmt.Println(l.char)
-			return tokens, NewIlliegalCharError(l.char)
+			return tokens, NewIlliegalCharError(l.char, l.pos, l.fn)
 		}
 	}
 
