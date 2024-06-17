@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type NumberNode struct {
 	tok token
 }
@@ -8,12 +10,20 @@ func NewNumberNode(tok token) *NumberNode {
 	return &NumberNode{tok: tok}
 }
 
-type BinOpNode struct {
-	leftNode  token
-	optok     token
-	rightNode token
+func (n NumberNode) toString() string {
+	return fmt.Sprintf(n.tok.toString())
 }
 
-func NewBinOpNode(leftNode token, optok token, rightNode token) *BinOpNode {
+type BinOpNode struct {
+	leftNode  string
+	optok     token
+	rightNode string
+}
+
+func NewBinOpNode(leftNode string, optok token, rightNode string) *BinOpNode {
 	return &BinOpNode{leftNode: leftNode, optok: optok, rightNode: rightNode}
+}
+
+func (b BinOpNode) toString() string {
+	return fmt.Sprintf("(%v , %v, %v)", b.leftNode, b.optok.toString(), b.rightNode)
 }

@@ -26,6 +26,10 @@ func (s *shell) startShell() {
 				panic(err)
 			}
 
+			p := NewParser(tokens)
+			ast := p.parse()
+
+			fmt.Println(ast)
 			for _, token := range tokens {
 				fmt.Println(token.toString())
 			}

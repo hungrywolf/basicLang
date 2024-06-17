@@ -13,6 +13,9 @@ const (
 	TT_RPAREN = "RPAEN"
 )
 
+var termOPTok = map[string]bool{TT_MUL: true, TT_DIV: true}
+var exprOPTok = map[string]bool{TT_PLUS: true, TT_MINUS: true}
+
 type token struct {
 	_type string
 	value []rune
