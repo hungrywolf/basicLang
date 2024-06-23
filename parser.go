@@ -14,7 +14,7 @@ func NewParser(tokens []token) *parser {
 }
 
 func (p *parser) parse() string {
-	return p.expr()
+	return expr(p)
 }
 
 func (p *parser) next() token {
@@ -26,7 +26,7 @@ func (p *parser) next() token {
 	return p.currentTok
 }
 
-func (p *parser) factor() string {
+func factor(p *parser) string {
 	tok := p.currentTok
 	if tok._type == TT_INT || tok._type == TT_FLOAT {
 		p.next()
@@ -36,16 +36,16 @@ func (p *parser) factor() string {
 	return ""
 }
 
-func (p *parser) term() string {
-	return opGeneric(p, p.factor, termOPTok)
+func term(p *parser) string {
+	return opGeneric(p, factor, termOPTok)
 }
 
-func (p *parser) expr() string {
-	return opGeneric(p, p.term, exprOPTok)
+func expr(p *parser) string {
+	return opGeneric(p, term, exprOPTok)
 }
 
-func opGeneric(p *parser, f func() string, keys map[string]bool) string {
-	left := f()
+func opGeneric(p *parser, f func(p *parser) string, keys map[string]bool) string {
+	left := f(p)
 	for {
 
 		if !keys[p.currentTok._type] {
@@ -54,7 +54,7 @@ func opGeneric(p *parser, f func() string, keys map[string]bool) string {
 
 		opTok := p.currentTok
 		p.next()
-		right := f()
+		right := f(p)
 		left = NewBinOpNode(left, opTok, right).toString()
 	}
 
